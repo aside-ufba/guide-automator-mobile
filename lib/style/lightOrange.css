@@ -1,0 +1,19 @@
+a {
+    color: rgb(250, 180, 97) !important;
+}
+
+body {
+    background-color: rgba(231, 200, 169, 0.1);
+}
+
+h1 {
+    color: rgb(255, 126, 0);
+}
+
+h2, h3, h4 {
+    color: rgb(247, 138, 9);
+}
+
+img {
+    border-color: rgb(242, 209, 185);
+}
