@@ -8,9 +8,9 @@ from io import BytesIO
 import time
 from guide_mobile import *
 
-arquivo = open("calculadora.md")
+arquivo = open("test.md")
 
-regex = re.compile(r'```(?:javascript|js)([\s\S]+?)```')
+regex = re.compile(r'```(?:python|py)([\s\S]+?)```')
 
 matches = regex.findall(arquivo.read())
 for command in matches :

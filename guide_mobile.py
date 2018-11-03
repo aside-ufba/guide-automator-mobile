@@ -4,8 +4,10 @@ import pytest
 import textwrap
 from appium import webdriver
 from PIL import Image, ImageDraw, ImageFont
-from io import BytesIO
+import io
 import time
+from IPython.display import display
+from appium.webdriver.common.touch_action import TouchAction
 
 def load_driver():
         # calling_request = request._pyfuncitem.name
@@ -27,55 +29,39 @@ def load_driver():
         return driver
 
 driver = None
-screenshotName = None
+actions = None
 
 def init():
-    global driver, screenshotName
-    driver = load_driver()
-    screenshotName = 0
-
-def click(id):
     global driver
-    driver.find_element_by_id(id).click()
+    driver = load_driver()    
+    actions = TouchAction(driver)
 
-def takeScreenshot():
-    global driver, screenshotName
-    screenshotName+=1
-    driver.save_screenshot(str(screenshotName)+".png")
+def takeScreenshot():    
+    display(Image.open(io.BytesIO(driver.get_screenshot_as_png())))
 
 def takeScreenshotElement(id):    
-    global driver, screenshotName
+    global driver
     element = driver.find_element_by_id(id)
     location = element.location
     size = element.size
     png = driver.get_screenshot_as_png()
-    img = Image.open(BytesIO(png))
+    img = Image.open(io.BytesIO(png))
     left = location['x']
     top = location['y']
     right = location['x'] + size['width']
     bottom = location['y'] + size['height']
-    img = img.crop((int(left), int(top), int(right), int(bottom)))
-    img.height    
-    screenshotName+=1
-    img.save(str(screenshotName)+".png")
-    
-def sendKeys(id, text):
-    global driver
-    driver.find_element_by_id(id).sendKeys(text)
+    img = img.crop((int(left), int(top), int(right), int(bottom)))    
+    display(img)
 
 # highlight
 def highlightElement(id, rectangleWidht = 5):    
 
-    global driver, screenshotName
-    screenshotName+=1
-    nameImg = str(screenshotName)+".png"
-    driver.save_screenshot(nameImg)
-
+    global driver
     element = driver.find_element_by_id(id)
     location = element.location
     size = element.size
     
-    img = Image.open(nameImg).convert('RGB')
+    img = Image.open(io.BytesIO(driver.get_screenshot_as_png())).convert('RGB')
     left = location['x']
     top = location['y']
     right = location['x'] + size['width']
@@ -83,10 +69,19 @@ def highlightElement(id, rectangleWidht = 5):
 
     draw = ImageDraw.Draw(img)
     draw.rectangle(((int(left), int(top)), (int(right), int(bottom))), outline="#FF0000", width=rectangleWidht)    
-    del draw
-
-    img.save(nameImg)
     
+    display(img)    
+
+def sleep(time_steep):
+    time.sleep(time_steep)
+
+def click(id):
+    global driver
+    driver.find_element_by_id(id).click()
+
+def sendKeys(id, text):
+    global driver
+    driver.find_element_by_id(id).sendKeys(text)
 
 def getText(id):
     global driver
@@ -96,6 +91,41 @@ def scrolltoElement(id):
     global driver
     return driver.find_element_by_id(id).location_once_scrolled_into_view
 
+def setLandscapeOrientation():
+    driver.orientation = "LANDSCAPE"
+
+def setPortraitOrientation():
+    driver.orientation = "PORTRAIT"
+
 def quit():
     global driver
     driver.quit()
+
+# Operations with touch
+def tab(id, pCount=1):
+    global driver, actions
+    actions.tap(driver.find_element_by_id(id), count=pCount)
+    actions.release()
+    actions.perform()
+
+def press(id):
+    global driver, actions
+    actions = TouchAction(driver)
+    actions.press(driver.find_element_by_id(id))    
+    actions.release()
+    actions.perform()
+
+def longPress(id, pDuration):
+    global driver, actions
+    actions = TouchAction(driver)
+    actions.long_press(driver.find_element_by_id(id), duration=pDuration)
+    actions.release()
+    actions.perform()
+
+def move_to_direction(id, idDirection):
+    actions = TouchAction(driver)
+    actions.press(driver.find_element_by_id(id))
+    actions.move_to(driver.find_element_by_id(idDirection))
+    actions.release()
+    actions.perform()
+
