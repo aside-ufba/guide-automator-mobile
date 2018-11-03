@@ -57,18 +57,21 @@ def takeScreenshotElement(id):
 def highlightElement(id, rectangleWidht = 5):    
 
     global driver
-    element = driver.find_element_by_id(id)
-    location = element.location
-    size = element.size
     
+    idList = id.split(',')
     img = Image.open(io.BytesIO(driver.get_screenshot_as_png())).convert('RGB')
-    left = location['x']
-    top = location['y']
-    right = location['x'] + size['width']
-    bottom = location['y'] + size['height']
+    for idItem in idList:
+        element = driver.find_element_by_id(idItem.strip())
+        location = element.location
+        size = element.size        
+        
+        left = location['x']
+        top = location['y']
+        right = location['x'] + size['width']
+        bottom = location['y'] + size['height']
 
-    draw = ImageDraw.Draw(img)
-    draw.rectangle(((int(left), int(top)), (int(right), int(bottom))), outline="#FF0000", width=rectangleWidht)    
+        draw = ImageDraw.Draw(img)
+        draw.rectangle(((int(left), int(top)), (int(right), int(bottom))), outline="#FF0000", width=rectangleWidht)    
     
     display(img)    
 
@@ -128,4 +131,3 @@ def move_to_direction(id, idDirection):
     actions.move_to(driver.find_element_by_id(idDirection))
     actions.release()
     actions.perform()
-
