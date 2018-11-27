@@ -40,8 +40,8 @@ def load_driver():
                 "noReset": "true",
                 "full-reset": "false",
                 "deviceName": "0045816737",
-                "appPackage": "com.google.android.contacts",
-                "appActivity": "com.android.contacts.activities.ContactsFrontDoor"                
+                "appPackage": "com.google.android.apps.translate",
+                "appActivity": "com.google.android.apps.translate.TranslateActivity"
             }
         )        
 
@@ -57,7 +57,15 @@ def init():
     actions = TouchAction(driver)
 
 def takeScreenshot():    
-    display(Image.open(io.BytesIO(driver.get_screenshot_as_png())))
+
+    img = Image.open(io.BytesIO(driver.get_screenshot_as_png()))
+
+    basewidth = 250
+    wpercent = (basewidth/float(img.size[0]))
+    hsize = int((float(img.size[1])*float(wpercent)))
+    img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+
+    display(img)
 
 def takeScreenshotElementById(id):    
     global driver
@@ -121,7 +129,12 @@ def highlightElementById(id, rectangleWidht = 5):
         draw = ImageDraw.Draw(img)
         draw.rectangle(((int(left), int(top)), (int(right), int(bottom))), outline="#FF0000", width=rectangleWidht)    
     
-    display(img)    
+    basewidth = 250
+    wpercent = (basewidth/float(img.size[0]))
+    hsize = int((float(img.size[1])*float(wpercent)))
+    img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+
+    display(img)
 
 def highlightElementByAccessibilityId(id, rectangleWidht = 5):    
 
@@ -142,6 +155,11 @@ def highlightElementByAccessibilityId(id, rectangleWidht = 5):
         draw = ImageDraw.Draw(img)
         draw.rectangle(((int(left), int(top)), (int(right), int(bottom))), outline="#FF0000", width=rectangleWidht)    
     
+    basewidth = 250
+    wpercent = (basewidth/float(img.size[0]))
+    hsize = int((float(img.size[1])*float(wpercent)))
+    img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+
     display(img)    
 
 def highlightElementByXpath(xpath, rectangleWidht = 5):    
@@ -163,6 +181,11 @@ def highlightElementByXpath(xpath, rectangleWidht = 5):
         draw = ImageDraw.Draw(img)
         draw.rectangle(((int(left), int(top)), (int(right), int(bottom))), outline="#FF0000", width=rectangleWidht)    
     
+    basewidth = 250
+    wpercent = (basewidth/float(img.size[0]))
+    hsize = int((float(img.size[1])*float(wpercent)))
+    img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+
     display(img) 
 
 def sleep(time_steep):
@@ -184,15 +207,15 @@ def clickByXPath(xpath):
 # sendkeys
 def sendKeysByID(id, text):
     global driver
-    driver.find_element_by_id(id).sendKeys(text)
+    driver.find_element_by_id(id).send_keys(text)
 
 def sendKeysByAccessibilityId(id, text):
     global driver
-    driver.find_element_by_accessibility_id(id).sendKeys(text)
+    driver.find_element_by_accessibility_id(id).send_keys(text)
 
 def sendKeysByXpath(xpath, text):
     global driver
-    driver.find_element_by_xpath(xpath).sendKeys(text)
+    driver.find_element_by_xpath(xpath).send_keys(text)
 
 # getText
 def getTextById(id):
