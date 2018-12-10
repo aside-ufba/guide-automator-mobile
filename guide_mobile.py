@@ -51,11 +51,74 @@ def load_driver():
 driver = None
 actions = None
 
+# Comandos basicos
 def init():
     global driver
     driver = load_driver()    
     actions = TouchAction(driver)
 
+def clickByID(id):
+    global driver
+    driver.find_element_by_id(id).click()
+
+def clickByAccessibilityId(accessibilityId):
+    global driver
+    driver.find_element_by_accessibility_id(accessibilityId).click()
+
+def clickByXPath(xpath):
+    global driver    
+    driver.find_element_by_xpath(xpath).click()
+
+def sendKeysByID(id, text):
+    global driver
+    driver.find_element_by_id(id).send_keys(text)
+
+def sendKeysByAccessibilityId(accessibilityId, text):
+    global driver
+    driver.find_element_by_accessibility_id(accessibilityId).send_keys(text)
+
+def sendKeysByXpath(xpath, text):
+    global driver
+    driver.find_element_by_xpath(xpath).send_keys(text)
+
+def getTextById(id):
+    global driver
+    return driver.find_element_by_id(id).text
+
+def getTextByAccessibilityId(accessibilityId):
+    global driver
+    return driver.find_element_by_accessibility_id(accessibilityId).text
+
+def getTextByXpath(xpath):
+    global driver
+    return driver.find_element_by_xpath(xpath).text
+
+def scrolltoElementById(id):
+    global driver, actions
+    actions = TouchAction(driver)
+    element = driver.find_element_by_id(id)
+    print (element)
+    actions.move_to(el=element).perform()
+
+def scrolltoElementByAccessibilityId(accessibilityId):
+    global driver, actions
+    actions = TouchAction(driver)
+    element = driver.find_element_by_accessibility_id(accessibilityId)
+    print (element)
+    actions.move_to(el=element).perform()
+
+def scrolltoElementByXpath(xpath):
+    global driver, actions
+    actions = TouchAction(driver)
+    element = driver.find_element_by_xpath(xpath)
+    print (element)
+    actions.move_to(el=element).perform()
+
+def quit():
+    global driver
+    driver.quit()
+
+# Comandos para captura de tela
 def takeScreenshot():    
 
     img = Image.open(io.BytesIO(driver.get_screenshot_as_png()))
@@ -81,9 +144,9 @@ def takeScreenshotElementById(id):
     img = img.crop((int(left), int(top), int(right), int(bottom)))    
     display(img)
 
-def takeScreenshotElementAccessibilityId(id):
+def takeScreenshotElementAccessibilityId(accessibilityId):
     global driver
-    element = driver.find_element_by_accessibility_id(id)
+    element = driver.find_element_by_accessibility_id(accessibilityId)
     location = element.location
     size = element.size
     png = driver.get_screenshot_as_png()
@@ -109,7 +172,6 @@ def takeScreenshotElementXpath(id):
     img = img.crop((int(left), int(top), int(right), int(bottom)))    
     display(img)
 
-# highlight
 def highlightElementById(id, rectangleWidht = 5):    
 
     global driver
@@ -136,11 +198,11 @@ def highlightElementById(id, rectangleWidht = 5):
 
     display(img)
 
-def highlightElementByAccessibilityId(id, rectangleWidht = 5):    
+def highlightElementByAccessibilityId(accessibilityId, rectangleWidht = 5):    
 
     global driver
     
-    idList = id.split(',')
+    idList = accessibilityId.split(',')
     img = Image.open(io.BytesIO(driver.get_screenshot_as_png())).convert('RGB')
     for idItem in idList:
         element = driver.find_element_by_accessibility_id(idItem.strip())
@@ -162,7 +224,7 @@ def highlightElementByAccessibilityId(id, rectangleWidht = 5):
 
     display(img)    
 
-def highlightElementByXpath(xpath, rectangleWidht = 5):    
+def highlightElementByXpath(xpath, rectangleWidht = 5):
 
     global driver
     
@@ -188,80 +250,6 @@ def highlightElementByXpath(xpath, rectangleWidht = 5):
 
     display(img) 
 
-def sleep(time_steep):
-    time.sleep(time_steep)
-
-# click
-def clickByID(id):
-    global driver
-    driver.find_element_by_id(id).click()
-
-def clickByAccessibilityId(id):
-    global driver
-    driver.find_element_by_accessibility_id(id).click()
-
-def clickByXPath(xpath):
-    global driver    
-    driver.find_element_by_xpath(xpath).click()
-
-# sendkeys
-def sendKeysByID(id, text):
-    global driver
-    driver.find_element_by_id(id).send_keys(text)
-
-def sendKeysByAccessibilityId(id, text):
-    global driver
-    driver.find_element_by_accessibility_id(id).send_keys(text)
-
-def sendKeysByXpath(xpath, text):
-    global driver
-    driver.find_element_by_xpath(xpath).send_keys(text)
-
-# getText
-def getTextById(id):
-    global driver
-    return driver.find_element_by_id(id).text
-
-def getTextByAccessibilityId(id):
-    global driver
-    return driver.find_element_by_accessibility_id(id).text
-
-def getTextByXpath(xpath):
-    global driver
-    return driver.find_element_by_xpath(xpath).text
-
-# scrolltoElement
-def scrolltoElementById(id):
-    global driver, actions
-    actions = TouchAction(driver)
-    element = driver.find_element_by_id(id)
-    print (element)
-    actions.move_to(el=element).perform()
-
-def scrolltoElementByAccessibilityId(id):
-    global driver, actions
-    actions = TouchAction(driver)
-    element = driver.find_element_by_accessibility_id(id)
-    print (element)
-    actions.move_to(el=element).perform()
-
-def scrolltoElementByXpath(xpath):
-    global driver, actions
-    actions = TouchAction(driver)
-    element = driver.find_element_by_xpath(xpath)
-    print (element)
-    actions.move_to(el=element).perform()
-
-def setLandscapeOrientation():
-    driver.orientation = "LANDSCAPE"
-
-def setPortraitOrientation():
-    driver.orientation = "PORTRAIT"
-
-def quit():
-    global driver
-    driver.quit()
-
 # Operations with touch
 # gtab
 def tabById(id, pCount=1):
@@ -271,10 +259,10 @@ def tabById(id, pCount=1):
     actions.release()
     actions.perform()
 
-def tabByAccessibilityId(id, pCount=1):
+def tabByAccessibilityId(accessibilityId, pCount=1):
     global driver, actions
     actions = TouchAction(driver)
-    actions.tap(driver.find_element_by_accessibility_id(id), count=pCount)
+    actions.tap(driver.find_element_by_accessibility_id(accessibilityId), count=pCount)
     actions.release()
     actions.perform()
 
@@ -292,9 +280,9 @@ def pressById(id):
     actions.release()
     actions.perform()
 
-def pressByAccessibility_id(id):
+def pressByAccessibilityId(accessibilityId):
     global driver, actions    
-    actions.press(driver.find_element_by_accessibility_id(id))    
+    actions.press(driver.find_element_by_accessibility_id(accessibilityId))    
     actions.release()
     actions.perform()
 
@@ -305,19 +293,19 @@ def pressByXpath(xpath):
     actions.perform()
 
 # longPress
-def longPressById(id, pDuration):
+def longPressById(id, pDuration = 1):
     global driver, actions    
     actions.long_press(driver.find_element_by_id(id), duration=pDuration)
     actions.release()
     actions.perform()
 
-def longPressByAccessibilityId(id, pDuration):
+def longPressByAccessibilityId(accessibilityId, pDuration = 1):
     global driver, actions    
-    actions.long_press(driver.find_element_by_accessibility_id(id), duration=pDuration)
+    actions.long_press(driver.find_element_by_accessibility_id(accessibilityId), duration=pDuration)
     actions.release()
     actions.perform()
 
-def longPressByXpath(id, pDuration):
+def longPressByXpath(id, pDuration = 1):
     global driver, actions    
     actions.long_press(driver.find_element_by_xpath(id), duration=pDuration)
     actions.release()
@@ -330,8 +318,8 @@ def moveToDirectionByID(id, idDirection):
     actions.release()
     actions.perform()
 
-def moveToDirectionByAccessibilityId(id, idDirection):    
-    actions.press(driver.find_element_by_accessibility_id(id))
+def moveToDirectionByAccessibilityId(accessibilityId, idDirection):    
+    actions.press(driver.find_element_by_accessibility_id(accessibilityId))
     actions.move_to(driver.find_element_by_accessibility_id(idDirection))
     actions.release()
     actions.perform()
@@ -341,3 +329,13 @@ def moveToDirectionByXpath(xpath, xpathDirection):
     actions.move_to(driver.find_element_by_xpath(xpathDirection))
     actions.release()
     actions.perform()
+
+# Funcoes adicionais
+def setLandscapeOrientation():
+    driver.orientation = "LANDSCAPE"
+
+def setPortraitOrientation():
+    driver.orientation = "PORTRAIT"
+
+def sleep(time_steep):
+    time.sleep(time_steep)
