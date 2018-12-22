@@ -57,7 +57,7 @@ def init():
     driver = load_driver()    
     actions = TouchAction(driver)
 
-def clickByID(id):
+def clickById(id):
     global driver
     driver.find_element_by_id(id).click()
 
@@ -69,7 +69,7 @@ def clickByXPath(xpath):
     global driver    
     driver.find_element_by_xpath(xpath).click()
 
-def sendKeysByID(id, text):
+def sendKeysById(id, text):
     global driver
     driver.find_element_by_id(id).send_keys(text)
 
@@ -251,22 +251,22 @@ def highlightElementByXpath(xpath, rectangleWidht = 5):
     display(img) 
 
 # Operations with touch
-# gtab
-def tabById(id, pCount=1):
+# tap
+def tapById(id, pCount=1):
     global driver, actions
     actions = TouchAction(driver)
     actions.tap(driver.find_element_by_id(id), count=pCount)
     actions.release()
     actions.perform()
 
-def tabByAccessibilityId(accessibilityId, pCount=1):
+def tapByAccessibilityId(accessibilityId, pCount=1):
     global driver, actions
     actions = TouchAction(driver)
     actions.tap(driver.find_element_by_accessibility_id(accessibilityId), count=pCount)
     actions.release()
     actions.perform()
 
-def tabByAccessibilityXpath(xpath, pCount=1):
+def tapByAccessibilityXpath(xpath, pCount=1):
     global driver, actions
     actions = TouchAction(driver)
     actions.tap(driver.find_element_by_xpath(xpath), count=pCount)
@@ -312,7 +312,7 @@ def longPressByXpath(id, pDuration = 1):
     actions.perform()
 
 # moveToDirection
-def moveToDirectionByID(id, idDirection):    
+def moveToDirectionById(id, idDirection):    
     actions.press(driver.find_element_by_id(id))
     actions.move_to(driver.find_element_by_id(idDirection))
     actions.release()
